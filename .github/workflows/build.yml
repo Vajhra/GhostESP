@@ -1,0 +1,17 @@
+name: Build GhostESP C6
+on: [push, workflow_dispatch]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { submodules: recursive }
+      - uses: espressif/esp-idf-install@v1.1
+        with: { esp_idf_version: 'v5.1' }
+      - run: |
+          . $HOME/export.sh
+          idf.py set-target esp32c6
+          sed -i 's/\/\/ ble_init();/ble_init();\n    ble_start_scanning();/g' main/main.c
+          idf.py build
+      - uses: actions/upload-artifact@v4
+        with: { name: GhostESP-C6-Bin, path: build/*.bin }
