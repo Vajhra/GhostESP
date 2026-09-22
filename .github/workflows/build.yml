@@ -6,10 +6,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with: { submodules: recursive }
-      - uses: espressif/esp-idf-install@v1.1
+      - uses: espressif/install-esp-idf-action@v1
         with: { esp_idf_version: 'v5.1' }
       - run: |
-          . $HOME/export.sh
+
           idf.py set-target esp32c6
           sed -i 's/\/\/ ble_init();/ble_init();\n    ble_start_scanning();/g' main/main.c
           idf.py build
